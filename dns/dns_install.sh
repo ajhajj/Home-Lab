@@ -52,8 +52,6 @@ cat <<EOT > /var/named/fwd.${DOMAIN}.db
 ${DNS_HOSTNAME}           IN      A       ${IP_PREFIX}.${SERVER_IP}
 
 ;A - Record HostName To Ip Address
-repository      IN      A       ${IP_PREFIX}.19
-rhevm           IN      A       ${IP_PREFIX}.18
 
 ;CNAME record
 ;ftp            IN      CNAME   rhevm.${DOMAIN}.
@@ -75,8 +73,6 @@ cat <<EOT >> /var/named/${IP_ARPA}.db
 ${SERVER_IP}             IN       PTR     ${DNS_HOSTNAME}.${DOMAIN}.
 
 ;PTR Record IP address to HostName
-19             IN       PTR     repository.${DOMAIN}.
-18             IN       PTR     rhevm.${DOMAIN}.
 EOT
 
 chmod 777 /var/named/fwd.${DOMAIN}.db 
