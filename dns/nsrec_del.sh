@@ -43,5 +43,10 @@ esac
 done
 set -- "${POSITIONAL[@]}" # restore positional parameters
 
+if [ "x${IP}" = "x" ] && [ "x${HOSTNAME}" = "x" ]; then
+  echo "You need to provide at least one of IP or Hostname";
+  exit(0);
+fi
+
 sed -i -e '/'"${HOSTNAME}"' *IN *A *'"${IP_PREFIX}"'.'"${IP}"'/d' /var/named/fwd.${DOMAIN}.db
 sed -i -e '/'"${IP}"' *IN *PTR *'"${HOSTNAME}"'.'"${DOMAIN}"'./d' /var/named/${IP_ARPA}.db
