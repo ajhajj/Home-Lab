@@ -45,8 +45,15 @@ set -- "${POSITIONAL[@]}" # restore positional parameters
 
 if [ "x${IP}" = "x" ] && [ "x${HOSTNAME}" = "x" ]; then
   echo "You need to provide at least one of IP or Hostname";
-  exit(0);
+  exit(1);
+elif [ "x${HOSTNAME}" = "x" ]; then
+  sed -i -e '/ *IN *A *'"${IP_PREFIX}"'\.'"${IP}"'/d' /var/named/fwd.${DOMAIN}.db
+  sed -i -e '/'"${IP}"' *IN *PTR.*\.'"${DOMAIN}"'\./d' /var/named/${IP_ARPA}.db
+elif [ "x${IP}" = "x" ]; then
+  sed -i -e '/'"${HOSTNAME}"' *IN *A *'"${IP_PREFIX}"'\./d' /var/named/fwd.${DOMAIN}.db
+  sed -i -e '/ *IN *PTR *'"${HOSTNAME}"'\.'"${DOMAIN}"'\./d' /var/named/${IP_ARPA}.db
+else
+  sed -i -e '/'"${HOSTNAME}"' *IN *A *'"${IP_PREFIX}"'\.'"${IP}"'/d' /var/named/fwd.${DOMAIN}.db
+  sed -i -e '/'"${IP}"' *IN *PTR *'"${HOSTNAME}"'\.'"${DOMAIN}"'\./d' /var/named/${IP_ARPA}.db
 fi
 
-sed -i -e '/'"${HOSTNAME}"' *IN *A *'"${IP_PREFIX}"'.'"${IP}"'/d' /var/named/fwd.${DOMAIN}.db
-sed -i -e '/'"${IP}"' *IN *PTR *'"${HOSTNAME}"'.'"${DOMAIN}"'./d' /var/named/${IP_ARPA}.db
